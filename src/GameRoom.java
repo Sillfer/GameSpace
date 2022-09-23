@@ -245,18 +245,26 @@ public void AddReservation(){
         Print("The Total money attained of the day("+day+"/"+month+") is : "+Total+" DH.",ConsoleForeground.GREEN);
         return Total;
 }
-//public float CalculateGainMonth(){
-////    int month;
-////    int year;
-////
-////    Print("\n--------- Calculation of the month --------- : ");
-////
-////    month=ReadInt("Enter the month : ");
-////    year=ReadInt("Enter the year : ");
-////
-////    float Total=0;
-////
-////    for(int i =0; i< reservations.size(); i++){
-////        Calendar date
-//    }
+public float CalculateGainMonth(){
+    int month;
+    int year;
+
+    Print("\n--------- Calculation of the month --------- : ");
+
+    month=ReadInt("Enter the month : ");
+    year=ReadInt("Enter the year : ");
+
+    float Total=0;
+
+    for(int i =0; i< reservations.size(); i++){
+        Calendar date=reservations.get(i).getReservationDate();
+        if(date.get(Calendar.MONTH)+1==month && date.get(Calendar.YEAR)==year){
+            Total+=reservations.get(i).getPeriod().getPrice();
+        }
+    }
+    Print("The Total money attained of the month("+month+"/"+year+") is : "+Total+" DH.",ConsoleForeground.GREEN);
+    return Total;
 }
+}
+
+

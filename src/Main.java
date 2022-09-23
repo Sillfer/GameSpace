@@ -14,7 +14,7 @@ public class Main {
         Print("---------- Home Menu ----------", ConsoleForeground.PURPLE);
         Print("1: Add a reservation");
         Print("2: Statistics");
-        Print("2: Quit");
+        Print("3: Quit");
     choice=ReadInt("Please choose an option : ");
         switch(choice){
             case 1: gameRoom.AddReservation();
@@ -32,7 +32,7 @@ public class Main {
                         case 1: gameRoom.CalculateGainDay();
                         break;
                         case 2: gameRoom.CalculateGainMonth();
-//                        break;
+                        break;
                     }
                 }while (StatisticChoice<0 || choice>3);
         }
