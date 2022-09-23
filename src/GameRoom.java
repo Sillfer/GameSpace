@@ -245,4 +245,18 @@ public void AddReservation(){
         Print("The Total money attained of the day("+day+"/"+month+") is : "+Total+" DH.",ConsoleForeground.GREEN);
         return Total;
 }
+//public float CalculateGainMonth(){
+////    int month;
+////    int year;
+////
+////    Print("\n--------- Calculation of the month --------- : ");
+////
+////    month=ReadInt("Enter the month : ");
+////    year=ReadInt("Enter the year : ");
+////
+////    float Total=0;
+////
+////    for(int i =0; i< reservations.size(); i++){
+////        Calendar date
+//    }
 }
