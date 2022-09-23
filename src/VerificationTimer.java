@@ -12,6 +12,6 @@ public class VerificationTimer extends TimerTask {
     @Override
     public void run() {
 
-//        this.gameRoom.ControlePeriodique();
+        this.gameRoom.ControlePeriodique();
     }
 }

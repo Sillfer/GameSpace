@@ -15,8 +15,8 @@ public enum Period {
     private final String period;
 
     Period(String period, int price){
-    this.price =price;
-    this.period = period;
+        this.price =price;
+        this.period = period;
 
 
     }
@@ -41,8 +41,8 @@ public enum Period {
         Print("6: Quit");
 
         choice=ReadInt("Select The Period");
-        System.out.println(choice);
-    }while(choice>0 || choice<6);
+//        System.out.println(choice);
+    }while(choice<1 || choice>6);
         switch(choice){
             case 1: return Min30;
             case 2: return Hours1;

@@ -6,6 +6,7 @@ public enum ConsoleForeground {
     RED("\u001B[31m"),
     GREEN("\u001B[32m"),
     YELLOW("\u001B[33m"),
+    MAGENTA("\u001b[35m"),
     PURPLE("\u001B[35m");
 
     private final String Value;

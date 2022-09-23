@@ -15,14 +15,14 @@ this.PlayerName=PlayerName;
 }
 
 public static Player NewPlayer(){
-    System.out.println("");
-    System.out.println(" -------- Player Information -------- ");
+    Print("");
+    Print(" -------- Player Information -------- ",ConsoleForeground.PURPLE);
     do{
-    String PlayerName = ReadString("Enter the player name : ");
+        String PlayerName = ReadString("Enter the player name : ");
     if(PlayerName.trim().length() >= 3 && PlayerName.trim().length() <= 10){
-return  new Player(PlayerName);
+        return  new Player(PlayerName);
     }else{
-Print("The name is not respecting the rules.");
+        Print("The name is not respecting the rules.");
     }
     }while(true);
 }

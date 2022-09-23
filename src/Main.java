@@ -5,8 +5,9 @@ import static Helpers.ConsoleHelper.*;
 public class Main {
     public static void main(String[] args) {
     GameRoom gameRoom = new GameRoom();
+    VerificationTimer ControlePeriodique=new VerificationTimer(gameRoom);
     Timer timer = new Timer(true);
-//    timer.scheduleAtFixedRate();
+    timer.scheduleAtFixedRate(ControlePeriodique,0,60*1000); //min
 
     int choice=-1;
     do {
@@ -18,6 +19,7 @@ public class Main {
         switch(choice){
             case 1: gameRoom.AddReservation();
             break;
+//            case 2:
         }
     }while (choice!=3);
     timer.cancel();

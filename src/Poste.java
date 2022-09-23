@@ -39,10 +39,10 @@ public boolean Reserved(){
     this.Lightup();
     }
 
-    public void Release(){
-        this.used=null;
-        this.SwitchOff();
-    }
+//    public void Release(){
+//        this.used=null;
+//        this.SwitchOff();
+//    }
 
 
 
@@ -51,11 +51,11 @@ public boolean  ControlPeriodique(){
     if(this.Reserved()){
         Calendar Now=Calendar.getInstance(); // Get the current date
 
-if(Now.get(Calendar.HOUR_OF_DAY) >= this.used.getUtulisationEnd().get(Calendar.HOUR_OF_DAY) &&
-        Now.get(Calendar.MINUTE) >= this.used.getUtulisationEnd().get(Calendar.MINUTE)){
-            this.CleanUp();
-            return true;
-        }
+    if(Now.get(Calendar.HOUR_OF_DAY) >= this.used.getUtulisationEnd().get(Calendar.HOUR_OF_DAY) &&
+            Now.get(Calendar.MINUTE) >= this.used.getUtulisationEnd().get(Calendar.MINUTE)){
+                this.CleanUp();
+                return true;
+            }
     }
     return false;
 }
@@ -73,7 +73,7 @@ if(Now.get(Calendar.HOUR_OF_DAY) >= this.used.getUtulisationEnd().get(Calendar.H
     }
 
     public boolean ContainsGame (Games game){
-        for (int i=0;i<=this.games.size();i++){
+        for (int i=0;i<this.games.size();i++){
             if(this.games.get(i).equals(game)){
                 return true;
         }

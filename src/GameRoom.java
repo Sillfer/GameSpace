@@ -52,19 +52,19 @@ public GameRoom(){
 
 }
 public Games SelectGame(){
-int choice= -1;
-do{
-    Print("");
-    Print("---------- Select the game ----------", ConsoleForeground.PURPLE);
-        for (int i = 0; i<GamesList.size();i++){
-            Print((i+1)+". "+GamesList.get(i).getGameName()+".");
-        }
-    Print((GamesList.size()+1)+". Quit.");
-        choice=ReadInt("Select The Game : ");
-        if(choice<1 || choice >(GamesList.size()+1)){
-            Print("Choice Invalid.", ConsoleForeground.RED);
-        }
-    }while(choice<1 || choice >(GamesList.size()+1));
+    int choice= -1;
+        do{
+            Print("");
+            Print("---------- Select the game ----------", ConsoleForeground.PURPLE);
+                for (int i = 0; i<GamesList.size();i++){
+                    Print((i+1)+". "+GamesList.get(i).getGameName()+".");
+                }
+            Print((GamesList.size()+1)+". Quit.");
+                choice=ReadInt("Select The Game : ");
+                if(choice<1 || choice >(GamesList.size()+1)){
+                    Print("Choice Invalid.", ConsoleForeground.RED);
+                }
+            }while(choice<1 || choice >(GamesList.size()+1));
         if(choice<= GamesList.size()){
 //    System.out.println(choice);
         return GamesList.get(choice-1);
@@ -77,6 +77,7 @@ return  null;
         return Period.SelectPeriod();
     }
 public Player SelectPlayer(){
+// Menu to add the player
     return Player.NewPlayer();
 }
 public void AddReservation(){
@@ -98,10 +99,150 @@ public void AddReservation(){
         }
 
         Reservation reservation=new Reservation(player,period,games);
-//        ReservationState reservationState=VerifyReservation(reservation);
+        ReservationState reservationState=VerifyReservation(reservation);
+
+        switch (reservationState){
+            case ENDED:
+                Print("============================================",ConsoleForeground.RED, ConsoleBackground.BLACK);
+                Print("|    Reservation impossible for today.     |",ConsoleForeground.RED,ConsoleBackground.BLACK);
+                Print("============================================",ConsoleForeground.RED,ConsoleBackground.BLACK);
+                break;
+            case In_QUEUE:
+                Poste p=reservation.getPoste();
+                if(waiting.get(p).size()<10){ //get(p) = poste -----> return value = list of reservations for that post
+                    reservations.add(reservation);
+                    waiting.get(p).add(reservation);
+
+                 Print("============================================",ConsoleForeground.MAGENTA, ConsoleBackground.BLACK);
+                 Print("|                IN QUEUE                  |",ConsoleForeground.MAGENTA,ConsoleBackground.BLACK);
+                 Print("============================================",ConsoleForeground.MAGENTA,ConsoleBackground.BLACK);
+                 Print(reservation.toString(),ConsoleForeground.MAGENTA,ConsoleBackground.BLACK);
+                 Print("============================================",ConsoleForeground.MAGENTA, ConsoleBackground.BLACK);
+                }else {
+                    Print("Reservation annuled . The Queue is full", ConsoleForeground.RED,ConsoleBackground.BLACK);
+                }
+                break;
+
+            case IN_POST:
+                reservations.add(reservation);
+                reservation.getPoste().setInProgress(reservation);
+                Print("===============================================",ConsoleForeground.GREEN, ConsoleBackground.BLACK);
+                Print("|                    IN POST                  |",ConsoleForeground.GREEN, ConsoleBackground.BLACK);
+                Print("===============================================",ConsoleForeground.GREEN, ConsoleBackground.BLACK);
+                Print(reservation.toString(),ConsoleForeground.GREEN,ConsoleBackground.BLACK);
+
+                Print("============================================",ConsoleForeground.GREEN, ConsoleBackground.BLACK);
+                break;
+        }
 }
 
-//    public ReservationState VerifyReservation(Reservation reservation){
-//
-//    }
+    public ReservationState VerifyReservation(Reservation reservation){
+//            Return the reservation state and assign if it's not annulled
+
+        Calendar DateLimit=Calendar.getInstance();
+        DateLimit.set(Calendar.HOUR_OF_DAY,20);
+        DateLimit.set(Calendar.MINUTE,00);
+
+        List<Poste> gamePosts=this.getGamePost(reservation.getGames());
+        Calendar Mindate;
+        if(Calendar.getInstance().compareTo(DateLimit)<0){
+//        Post is available
+            for (int i = 0; i < gamePosts.size(); i++){
+                if(!gamePosts.get(i).Reserved()){
+                    reservation.setPoste(gamePosts.get(i));
+                    reservation.setUtulisationStart(reservation.getReservationDate());
+                    if(reservation.getUtulisationEnd().compareTo(DateLimit)<=0){
+                        return ReservationState.IN_POST;
+                    }else {
+                        return ReservationState.ENDED;
+                    }
+                }
+            }
+            //------------------- MAX -----------------------------------------------------------------
+            List<PosteCalendar> MaxDates= new ArrayList<>();  //This is to stock the max date for the poste
+            for (int i = 0; i < gamePosts.size(); i++){ // key : get(gamePosts.get(i))
+            List<Reservation> reservationsPoste = waiting.get(gamePosts.get(i)); // Return the reservation list for the post
+
+            Optional<Reservation> MaxPosteReservation = reservationsPoste.stream().max(new Comparator<Reservation>() {
+                @Override
+                public int compare(Reservation o1, Reservation o2) {
+                    return o1.getUtulisationEnd().compareTo(o2.getUtulisationEnd());
+                }
+            });
+
+            if(MaxPosteReservation.isPresent()){ // if the max exists (Players exist in the queue of this post)
+                MaxDates.add(new PosteCalendar(gamePosts.get(i), MaxPosteReservation.get().getUtulisationEnd()));
+            }else{
+                // No one in the the queue
+                MaxDates.add(new PosteCalendar(gamePosts.get(i), gamePosts.get(i).getInProgress().getUtulisationEnd()));
+            }
+            }
+            //---------------------------MIN -------------------------------------------------------------
+
+                Optional<PosteCalendar> selectedPoste = MaxDates.stream().min(new Comparator<PosteCalendar>() {
+                    @Override
+                    public int compare(PosteCalendar o1, PosteCalendar o2) {
+
+                        return o1.getDate().compareTo(o2.getDate()); // Return the min Date
+                    }
+                });
+
+            if(selectedPoste.isPresent()){
+                reservation.setPoste(selectedPoste.get().getPoste());
+                reservation.setUtulisationStart(selectedPoste.get().getDate()); // Start Date
+                if(reservation.getUtulisationEnd().compareTo(DateLimit)<= 0){ // The case where the period chosen is < = 20
+                        return ReservationState.In_QUEUE;
+                }
+            }
+
+        }
+            return ReservationState.ENDED;
+        }
+
+//        --------------------------------------------------------------------------------------
+
+        public List<Poste> getGamePost(Games games){
+            List<Poste> gamePosts=new ArrayList<Poste>();
+
+            for(int i = 0; i<this.postes.size();i++){
+                if (this.postes.get(i).ContainsGame(games)){
+                    gamePosts.add(this.postes.get(i));
+                }
+            }
+            return gamePosts;
+        }
+
+    public void ControlePeriodique(){
+        //Calling the function controlePeriodique of postes and assigning a player of the queue list to it
+        for (int i =0 ; i<postes.size();i++){
+            if(postes.get(i).ControlPeriodique()){
+                if(waiting.get(postes.get(i)).size()>0){
+                // taking a reservation of the queue list and making it in place in the poste and deleting of the list
+                    Reservation r=waiting.get(postes.get(i)).get(0);
+                    waiting.get(postes.get(i)).remove(0);
+                    postes.get(i).setInProgress(r);
+                }
+            }
+        }
+    }
+
+    public float CalculateGainDay(){
+        int day;
+        int month;
+//        int year;
+        Print("\n--------- Calculation of the day --------- : ");
+        day=ReadInt("Enter the day : ");
+        month=ReadInt("Enter the month : ");
+
+        float Total=0;
+
+        for (int  i=0; i < reservations.size();i++){
+            Calendar date=reservations.get(i).getReservationDate();
+            if(date.get(Calendar.DAY_OF_MONTH)==day && date.get(Calendar.MONTH)+1 == month){
+                Total+=reservations.get(i).getPeriod().getPrice();
+            }
+        }
+        Print("The Total money attained of the day("+day+"/"+month+") is : "+Total+" DH.",ConsoleForeground.GREEN);
+        return Total;
+}
 }

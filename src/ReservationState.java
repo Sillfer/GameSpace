@@ -1,5 +1,5 @@
 public enum ReservationState {
     ENDED,
-    PENDING,
+    In_QUEUE,
     IN_POST
 }
