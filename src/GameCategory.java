@@ -1,5 +1,6 @@
 public enum GameCategory {
     Sport,
     Rpg,
-    Fps
+    Fps,
+    Fighting
 }

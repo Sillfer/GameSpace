@@ -1,5 +1,10 @@
 //import java.rmi.server.RemoteServer;
+import Helpers.ConsoleBackground;
+import Helpers.ConsoleForeground;
+
 import java.util.Calendar;
+
+import static Helpers.ConsoleHelper.Print;
 import static Helpers.ConsoleHelper.padRight;
 public class Reservation {
 
@@ -56,45 +61,51 @@ public class Reservation {
     public void CalculateUtulisationEnd(){
         this.utulisationEnd=(Calendar) this.utulisationStart.clone();
         //Utulisation period of the poste by the user who reserved
-        switch(this.period){
-            case Min30:
-                this.utulisationEnd.add(Calendar.MINUTE,30);  //utulisation date end
+        switch (this.period) {
+            case Min30 -> {
+                this.utulisationEnd.add(Calendar.MINUTE, 30);  //utulisation date end
+//                this.utulisationStart.set(Calendar.MINUTE,30);
+//                this.utulisationStart.set(Calendar.SECOND,0);
+
 
                 // 30 min occupy : 9:47 -> end date is 10:17
-                if(this.utulisationStart.get(Calendar.HOUR_OF_DAY)<12 && this.utulisationEnd.get(Calendar.HOUR_OF_DAY)>=12){
-                    this.utulisationEnd.add(Calendar.HOUR,2);
+                if (this.reservationDate.get(Calendar.HOUR_OF_DAY)>= 12 && this.reservationDate.get(Calendar.HOUR_OF_DAY)<14) {
+                    Print("============================================",ConsoleForeground.RED, ConsoleBackground.BLACK);
+                    Print("|    We're out of service.     |",ConsoleForeground.RED,ConsoleBackground.BLACK);
+                    Print("============================================",ConsoleForeground.RED,ConsoleBackground.BLACK);
+                     // If the reservation end time is between >=12
+                    //We add 2 hours so that the reservation continues at 14h.
                 }
-                break;
+                else if(this.utulisationStart.get(Calendar.HOUR_OF_DAY) < 12 && this.utulisationEnd.get(Calendar.HOUR_OF_DAY) >= 12){
+                    this.utulisationEnd.add(Calendar.HOUR, 2);
 
-            case Hours1:
-                this.utulisationEnd.add(Calendar.HOUR,1);
-
-                if(this.utulisationStart.get(Calendar.HOUR_OF_DAY)<12 && this.utulisationEnd.get(Calendar.HOUR_OF_DAY) >= 12){
-                    this.utulisationEnd.add(Calendar.HOUR,2);
+//
                 }
-                break;
 
-            case Hours2:
-                this.utulisationEnd.add(Calendar.HOUR,2);
-
-                if(this.utulisationStart.get(Calendar.HOUR_OF_DAY)<12 && this.utulisationEnd.get(Calendar.HOUR_OF_DAY) >=12){
-                    this.utulisationEnd.add(Calendar.HOUR,2);
+            }
+            case Hours_1 -> {
+                this.utulisationEnd.add(Calendar.HOUR, 1);
+                if (this.utulisationStart.get(Calendar.HOUR_OF_DAY) < 12 && this.utulisationEnd.get(Calendar.HOUR_OF_DAY) >= 12) {
+                    this.utulisationEnd.add(Calendar.HOUR, 2);
                 }
-                break;
-
-            case Hours5:
-                this.utulisationEnd.add(Calendar.HOUR,5);
-
-                if(this.utulisationStart.get(Calendar.HOUR_OF_DAY)<12 && this.utulisationEnd.get(Calendar.HOUR_OF_DAY)>=12){
-                    this.utulisationEnd.add(Calendar.HOUR,2);
+            }
+            case Hours_2 -> {
+                this.utulisationEnd.add(Calendar.HOUR, 2);
+                if (this.utulisationStart.get(Calendar.HOUR_OF_DAY) < 12 && this.utulisationEnd.get(Calendar.HOUR_OF_DAY) >= 12) {
+                    this.utulisationEnd.add(Calendar.HOUR, 2);
                 }
-                break;
-
-            case WholeDay:
-                this.utulisationEnd.set(Calendar.HOUR_OF_DAY,20);
-                this.utulisationEnd.set(Calendar.MINUTE,0);
-                this.utulisationEnd.set(Calendar.SECOND,0);
-                break;
+            }
+            case Hours_5 -> {
+                this.utulisationEnd.add(Calendar.HOUR, 5);
+                if (this.utulisationStart.get(Calendar.HOUR_OF_DAY) < 12 && this.utulisationEnd.get(Calendar.HOUR_OF_DAY) >= 12) {
+                    this.utulisationEnd.add(Calendar.HOUR, 2);
+                }
+            }
+            case WholeDay -> {
+                this.utulisationEnd.set(Calendar.HOUR_OF_DAY, 20);
+                this.utulisationEnd.set(Calendar.MINUTE, 0);
+                this.utulisationEnd.set(Calendar.SECOND, 0);
+            }
         }
     }
 

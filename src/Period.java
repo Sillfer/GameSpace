@@ -6,9 +6,9 @@ import static Helpers.ConsoleHelper.ReadInt;
 
 public enum Period {
     Min30("30min",5),
-    Hours1("1Hours",10),
-    Hours2("2Hours", 18),
-    Hours5("5Hours",40),
+    Hours_1("1Hours",10),
+    Hours_2("2Hours", 18),
+    Hours_5("5Hours",40),
     WholeDay("WholeDay", 65);
 
     private final int price;
@@ -45,9 +45,9 @@ public enum Period {
     }while(choice<1 || choice>6);
         switch(choice){
             case 1: return Min30;
-            case 2: return Hours1;
-            case 3: return Hours2;
-            case 4: return Hours5;
+            case 2: return Hours_1;
+            case 3: return Hours_2;
+            case 4: return Hours_5;
             case 5: return WholeDay;
             case 6: break;
             default:Print("Choice Invalid.",ConsoleForeground.RED);

@@ -28,6 +28,10 @@ public GameRoom(){
     GamesList.add(blackdesert);
     Games assassincreed = new Games(GameCategory.Rpg, "ASSASIN'S CREED");
     GamesList.add(assassincreed);
+    Games mario = new Games(GameCategory.Rpg, "Mario Odyssey" );
+    GamesList.add(mario);
+    Games supersmash = new Games(GameCategory.Fighting, "Super Smash Bros. Ultimate");
+    GamesList.add(supersmash);
 
     // Initialising the Posts
 
@@ -49,6 +53,10 @@ public GameRoom(){
     Poste p6=new Poste(Console.Playstation_5, Tv.Dell,Arrays.asList(callofduty,assassincreed));
     postes.add(p6);
     waiting.put(p6,new ArrayList<Reservation>());
+    Poste p7=new Poste(Console.Nintendo_Switch, Tv.HP,Arrays.asList(assassincreed,mario));
+    postes.add(p7);
+    Poste p8=new Poste(Console.Nintendo_Switch, Tv.Samsung,Arrays.asList(mario,supersmash));
+    postes.add(p8);
 
 }
 public Games SelectGame(){
@@ -135,7 +143,7 @@ public void AddReservation(){
                 break;
         }
 }
-
+// Reservation verification
     public ReservationState VerifyReservation(Reservation reservation){
 //            Return the reservation state and assign if it's not annulled
 
@@ -160,6 +168,7 @@ public void AddReservation(){
             }
             //------------------- MAX -----------------------------------------------------------------
             List<PosteCalendar> MaxDates= new ArrayList<>();  //This is to stock the max date for the poste
+
             for (int i = 0; i < gamePosts.size(); i++){ // key : get(gamePosts.get(i))
             List<Reservation> reservationsPoste = waiting.get(gamePosts.get(i)); // Return the reservation list for the post
 
