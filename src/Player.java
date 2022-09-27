@@ -1,3 +1,4 @@
+import Helpers.ConsoleBackground;
 import Helpers.ConsoleForeground;
 
 import static Helpers.ConsoleHelper.*;
@@ -22,7 +23,7 @@ public static Player NewPlayer(){
     if(PlayerName.trim().length() >= 3 && PlayerName.trim().length() <= 10){
         return  new Player(PlayerName);
     }else{
-        Print("The name is not respecting the rules.");
+        Print("The name is not respecting the rules. 'The name needs to be between 3 and 10'",ConsoleForeground.RED, ConsoleBackground.BLACK);
     }
     }while(true);
 }

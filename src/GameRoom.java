@@ -14,7 +14,6 @@ public class GameRoom {
     private final Map<Poste,List<Reservation>> waiting=new HashMap<>();
 
 
-
 public GameRoom(){
     Games fifa = new Games(GameCategory.Sport, "FIFA");
     GamesList.add(fifa);
@@ -92,7 +91,7 @@ public void AddReservation(){
     Player player = SelectPlayer();
         if(player==null){
             Print(" Operation Annulled", ConsoleBackground.RED);
-        return;
+//        return;
 }
     Games games = SelectGame();
         if(games==null){
@@ -148,12 +147,18 @@ public void AddReservation(){
 //            Return the reservation state and assign if it's not annulled
 
         Calendar DateLimit=Calendar.getInstance();
+        Calendar Morning=Calendar.getInstance();
+        Calendar Afternoon=Calendar.getInstance();
+        Morning.set(Calendar.HOUR_OF_DAY,12);
+        Morning.set(Calendar.MINUTE,00);
+        Afternoon.set(Calendar.HOUR_OF_DAY,14);
+        Afternoon.set(Calendar.MINUTE,00);
         DateLimit.set(Calendar.HOUR_OF_DAY,20);
         DateLimit.set(Calendar.MINUTE,00);
 
         List<Poste> gamePosts=this.getGamePost(reservation.getGames());
         Calendar Mindate;
-        if(Calendar.getInstance().compareTo(DateLimit)<0){
+        if(Calendar.getInstance().compareTo(DateLimit)<0 && Calendar.getInstance().compareTo(Morning) < 0 && Calendar.getInstance().compareTo(Afternoon)<0){
 //        Post is available
             for (int i = 0; i < gamePosts.size(); i++){
                 if(!gamePosts.get(i).Reserved()){

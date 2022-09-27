@@ -14,6 +14,7 @@ public class Reservation {
     private Calendar reservationDate;
     private Calendar utulisationStart, utulisationEnd;
     private Poste poste;
+    private GameRoom room;
 
 
     public Reservation(Player player, Period period, Games games){
@@ -33,25 +34,25 @@ public class Reservation {
         return this.reservationDate;
     }
 
+    public Calendar getUtulisationStart(){
+        return this.utulisationStart;
+    }
+
     public void setUtulisationStart(Calendar date){
             this.utulisationStart=date;
             this.CalculateUtulisationEnd();
 }
 
-    public Calendar getUtulisationStart(){
-        return this.utulisationStart;
-    }
-
     public Calendar getUtulisationEnd(){
         return this.utulisationEnd;
     }
 
-    public void setPoste(Poste poste){
-        this.poste=poste;
-    }
-
     public Poste getPoste(){
         return this.poste;
+    }
+
+    public void setPoste(Poste poste){
+        this.poste=poste;
     }
 
     public Games getGames(){
@@ -60,26 +61,23 @@ public class Reservation {
 
     public void CalculateUtulisationEnd(){
         this.utulisationEnd=(Calendar) this.utulisationStart.clone();
+        this.utulisationStart.set(Calendar.SECOND,00);
+        this.utulisationEnd.set(Calendar.SECOND,00);
+
         //Utulisation period of the poste by the user who reserved
         switch (this.period) {
             case Min30 -> {
                 this.utulisationEnd.add(Calendar.MINUTE, 30);  //utulisation date end
-//                this.utulisationStart.set(Calendar.MINUTE,30);
-//                this.utulisationStart.set(Calendar.SECOND,0);
 
 
                 // 30 min occupy : 9:47 -> end date is 10:17
-                if (this.reservationDate.get(Calendar.HOUR_OF_DAY)>= 12 && this.reservationDate.get(Calendar.HOUR_OF_DAY)<14) {
-                    Print("============================================",ConsoleForeground.RED, ConsoleBackground.BLACK);
-                    Print("|    We're out of service.     |",ConsoleForeground.RED,ConsoleBackground.BLACK);
-                    Print("============================================",ConsoleForeground.RED,ConsoleBackground.BLACK);
-                     // If the reservation end time is between >=12
-                    //We add 2 hours so that the reservation continues at 14h.
-                }
-                else if(this.utulisationStart.get(Calendar.HOUR_OF_DAY) < 12 && this.utulisationEnd.get(Calendar.HOUR_OF_DAY) >= 12){
+//              // If the reservation end time is >=12
+//              //We add 2 hours so that the reservation continues at 14h.
+//                }
+                if(this.utulisationStart.get(Calendar.HOUR_OF_DAY) < 12 && this.utulisationEnd.get(Calendar.HOUR_OF_DAY) >= 12){
                     this.utulisationEnd.add(Calendar.HOUR, 2);
-
-//
+                    // If the reservation end time is between >=12
+                    //We add 2 hours so that the reservation continues at 14h
                 }
 
             }
